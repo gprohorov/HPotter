@@ -1,11 +1,14 @@
 package pro.edu;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class Main {
 
     public static void main(String[] args) {
 
         String myString = "\n" +
-                "The villagers of Little Hangleton still called it “the Riddle House,” even though it had been many years since the Riddle family had lived there. It stood on a hill overlooking the village, some of its windows boarded, tiles missing from its roof, and ivy spreading unchecked over its face. Once a fine looking manor, and easily the largest and grandest building for miles around, the Riddle House was now damp, derelict, and unoccupied.\n" +
+                "The villagers, of Little Hangleton still called it “the Riddle House,” even though it had been many years since the Riddle family had lived there. It stood on a hill overlooking the village, some of its windows boarded, tiles missing from its roof, and ivy spreading unchecked over its face. Once a fine looking manor, and easily the largest and grandest building for miles around, the Riddle House was now damp, derelict, and unoccupied.\n" +
                 "\n" +
                 "The Little Hangletons all agreed that the old house was “creepy.” Half a century ago, something strange and horrible had happened there, something that the older inhabitants of the village still liked to discuss when topics for gossip were scarce. The story had been picked over so many times, and had been embroidered in so many places, that nobody was quite sure what the truth was anymore. Every version of the tale, however, started in the same place: Fifty years before, at daybreak on a fine summer’s morning when the Riddle House had still been well kept and impressive, a maid had entered the drawing room to find all three Riddles dead.\n" +
                 "\n" +
@@ -38,12 +41,54 @@ public class Main {
                 "“Told you I wouldn’t like to get on the wrong side of Frank, " +
                 "didn’t I, Dot?” said an excited woman in the corner.\n";
 
-        final String[] array = myString.split(" ");
+        String myString2 = myString
+                .toLowerCase()
+/*                .replaceAll(",", "")
+                .replaceAll("!", "")
+                .replaceAll("\\?", "")
+                .replaceAll("\\.", "")
+                .replaceAll("\"", "")*/
+                .replaceAll("[^A-Za-z0-9 ]", "")
+                ;
+
+      //  String myStr2=Mystr.replaceAll("[^A-Za-zА-Яа-я0-9 ]", "");
+      //  String myString3 = myString2.replaceAll(".", "");
+
+
+        final String[] array = myString2.split(" ");
 
         //  System.out.println(array[2]);-----------------------------------
+/*
 
         for (int i = 0; i <= array.length-1 ; i++) {
             System.out.println(array[i]);
         }
+*/
+
+        List<String> words = Arrays.asList(array);
+        System.out.println(words.size());
+
+        Map<String, Integer> glossary = new HashMap<>();
+
+        for(String word:words){
+
+            if(glossary.containsKey(word)) {
+                Integer value = glossary.get(word);
+                value++;
+                glossary.put(word, value);
+            } else{
+                glossary.put(word,1);
+            }
+        }
+        System.out.println(glossary);
+        final Map<String, Integer> sortedByCount = glossary.entrySet()
+                .stream()
+                .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        System.out.println(sortedByCount);
     }
+
+
 }
